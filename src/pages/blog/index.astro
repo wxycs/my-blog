@@ -1,0 +1,97 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { formatDate, getReadingTime, sortPosts } from "@/utils/blog";
+
+const posts = sortPosts(await getCollection("blog"));
+const tags = Array.from(new Set(posts.flatMap((post) => post.data.tags))).sort();
+---
+
+<BaseLayout title="Blog" description="快乐小屋的文章列表">
+  <section class="page-shell">
+    <div class="page-title">
+      <p class="eyebrow">Blog</p>
+      <h1>文章</h1>
+      <p>慢慢写下想法、记录和一些值得保存的日常片段。</p>
+    </div>
+
+    <ul class="tag-list blog-tags" aria-label="全部标签">
+      {tags.map((tag) => <li class="tag">{tag}</li>)}
+    </ul>
+
+    <div class="post-list">
+      {
+        posts.map((post) => (
+          <a class="post-card card" href={`/blog/${post.slug}/`}>
+            <div class="post-meta">
+              <span>{formatDate(post.data.pubDate)}</span>
+              <span>{getReadingTime(post.body)} min read</span>
+            </div>
+            <h2>{post.data.title}</h2>
+            <p>{post.data.description}</p>
+            <ul class="tag-list">
+              {post.data.tags.map((tag) => <li class="tag">{tag}</li>)}
+            </ul>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-title {
+    max-width: 720px;
+    margin-bottom: 24px;
+  }
+
+  .page-title h1 {
+    margin: 0;
+    font-size: clamp(2.3rem, 6vw, 4.8rem);
+    line-height: 1;
+  }
+
+  .page-title p:last-child {
+    margin: 18px 0 0;
+    color: var(--muted);
+    font-size: 1.08rem;
+  }
+
+  .blog-tags {
+    margin-bottom: 28px;
+  }
+
+  .post-list {
+    display: grid;
+    gap: 16px;
+  }
+
+  .post-card {
+    display: grid;
+    gap: 12px;
+    padding: clamp(20px, 4vw, 30px);
+  }
+
+  .post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    color: var(--subtle);
+    font-size: 0.88rem;
+  }
+
+  .post-card h2,
+  .post-card p {
+    margin: 0;
+  }
+
+  .post-card h2 {
+    font-size: clamp(1.35rem, 3vw, 2rem);
+    line-height: 1.2;
+  }
+
+  .post-card p {
+    max-width: 760px;
+    color: var(--muted);
+  }
+</style>

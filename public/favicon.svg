@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="快乐小屋">
+  <rect width="64" height="64" rx="12" fill="#09090b"/>
+  <path d="M14 34 32 18l18 16v18H14V34Z" fill="#18181b" stroke="#60a5fa" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M25 52V38h14v14" fill="#09090b" stroke="#f4f4f5" stroke-width="4" stroke-linejoin="round"/>
+</svg>

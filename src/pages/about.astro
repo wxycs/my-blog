@@ -1,0 +1,119 @@
+---
+import { Github, Mail } from "lucide-astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { siteConfig } from "@/site.config";
+---
+
+<BaseLayout title="About" description={`关于 ${siteConfig.nickname}`}>
+  <section class="about-shell">
+    <div class="about-grid">
+      <div class="about-copy">
+        <p class="eyebrow">About Me</p>
+        <h1>{siteConfig.nickname}</h1>
+        <p class="lead">{siteConfig.tagline}</p>
+        <p>{siteConfig.description}</p>
+        <p>
+          这里之后可以继续补充经历、兴趣、正在学习的方向、常用工具和更完整的自我介绍。
+        </p>
+      </div>
+
+      <aside class="about-card panel">
+        <img
+          src={siteConfig.avatar}
+          width="160"
+          height="160"
+          alt={`${siteConfig.nickname} 的头像`}
+          loading="eager"
+        />
+        <div class="contact-links">
+          <a href={siteConfig.github}>
+            <Github size={18} aria-hidden="true" />
+            GitHub
+          </a>
+          <a href={`mailto:${siteConfig.email}`}>
+            <Mail size={18} aria-hidden="true" />
+            {siteConfig.email}
+          </a>
+        </div>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .about-shell {
+    width: min(980px, calc(100% - 32px));
+    margin: 0 auto;
+    padding: 54px 0 90px;
+  }
+
+  .about-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 320px;
+    gap: 24px;
+    align-items: start;
+  }
+
+  .about-copy h1 {
+    margin: 0;
+    font-size: clamp(2.4rem, 7vw, 5rem);
+    line-height: 1;
+  }
+
+  .about-copy p {
+    max-width: 680px;
+    color: var(--muted);
+    font-size: 1.08rem;
+  }
+
+  .about-copy .lead {
+    color: var(--text);
+    font-size: 1.35rem;
+    font-weight: 700;
+  }
+
+  .about-card {
+    padding: 24px;
+  }
+
+  .about-card img {
+    width: 160px;
+    height: 160px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    object-fit: cover;
+  }
+
+  .contact-links {
+    display: grid;
+    gap: 10px;
+    margin-top: 22px;
+  }
+
+  .contact-links a {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0 12px;
+    color: var(--muted);
+    transition:
+      background 180ms ease,
+      border-color 180ms ease,
+      color 180ms ease;
+  }
+
+  .contact-links a:hover {
+    border-color: var(--border-strong);
+    background: var(--surface-strong);
+    color: var(--text);
+  }
+
+  @media (max-width: 760px) {
+    .about-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
