@@ -73,6 +73,21 @@ const searchItems = [
           </div>
           <div class="result-list" id="result-list"></div>
         </div>
+
+        <div id="search-data" hidden aria-hidden="true">
+          {
+            searchItems.map((item) => (
+              <span
+                data-search-item
+                data-type={item.type}
+                data-title={item.title}
+                data-description={item.description}
+                data-href={item.href}
+                data-tags={item.tags.join(" ")}
+              />
+            ))
+          }
+        </div>
       </section>
 
       <aside class="profile-panel panel" aria-labelledby="profile-title">
@@ -176,7 +191,7 @@ const searchItems = [
     </section>
   </section>
 
-<script is:inline define:vars={{ searchItems }}>
+<script is:inline>
   const engines = {
     google: "https://www.google.com/search?q=",
     bing: "https://www.bing.com/search?q=",
@@ -184,12 +199,22 @@ const searchItems = [
   };
 
   const storageKey = "myblog.searchEngine";
+  const searchItems = Array.from(document.querySelectorAll("[data-search-item]")).map(
+    (item) => ({
+      type: item.dataset.type || "",
+      title: item.dataset.title || "",
+      description: item.dataset.description || "",
+      href: item.dataset.href || "/",
+      tags: item.dataset.tags || "",
+    }),
+  );
   const form = document.querySelector("#search-form");
   const input = document.querySelector("#search-input");
   const buttons = Array.from(document.querySelectorAll("[data-engine]"));
   const resultsPanel = document.querySelector("#site-results");
   const resultList = document.querySelector("#result-list");
   const resultCount = document.querySelector("#result-count");
+  const validEngines = new Set(["google", "bing", "github", "site"]);
   let activeEngine = localStorage.getItem(storageKey) || "google";
 
   function setEngine(engine) {
@@ -213,7 +238,7 @@ const searchItems = [
 
     const matches = searchItems
       .filter((item) => {
-        const haystack = [item.type, item.title, item.description, ...(item.tags || [])]
+        const haystack = [item.type, item.title, item.description, item.tags]
           .join(" ")
           .toLowerCase();
         return haystack.includes(normalized);
@@ -223,13 +248,16 @@ const searchItems = [
     resultList.replaceChildren(
       ...matches.map((item) => {
         const link = document.createElement("a");
+        const type = document.createElement("span");
+        const title = document.createElement("strong");
+        const description = document.createElement("small");
+
         link.className = "result-item";
         link.href = item.href;
-        link.innerHTML = `
-          <span>${item.type}</span>
-          <strong>${item.title}</strong>
-          <small>${item.description}</small>
-        `;
+        type.textContent = item.type;
+        title.textContent = item.title;
+        description.textContent = item.description;
+        link.append(type, title, description);
         return link;
       }),
     );
@@ -270,7 +298,7 @@ const searchItems = [
     window.location.href = `${engines[activeEngine]}${encodeURIComponent(query)}`;
   });
 
-  setEngine(engines[activeEngine] ? activeEngine : "google");
+  setEngine(validEngines.has(activeEngine) ? activeEngine : "google");
 </script>
 </BaseLayout>
 
